@@ -1,0 +1,18 @@
+# Sample NMEA parameter configuration
+device: /dev/ttyACM1
+debug: 1
+gnss:
+  qzss: true
+  sbas: true
+sbas:
+  max: 3
+  usage: 1
+dynamic_model: sea
+# Enable u-blox message publishers
+publish:
+  all: true
+  esf: true
+  aid:
+    hui: true
+  nav:
+    posecef: true

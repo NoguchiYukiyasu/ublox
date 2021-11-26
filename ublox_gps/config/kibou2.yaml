@@ -1,5 +1,7 @@
 # Sample NMEA parameter configuration
 device: /dev/ttyACM1
+gnss:
+  qzss: true
 nmea:
   set: true
   version: 65
