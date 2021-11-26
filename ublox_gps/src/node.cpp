@@ -840,7 +840,7 @@ UbloxFirmware7::UbloxFirmware7() {}
 void UbloxFirmware7::getRosParams() {
   //
   // GNSS configuration
-  //
+
   // GNSS enable/disable
   nh->param("gnss/gps", enable_gps_, true);
   nh->param("gnss/glonass", enable_glonass_, false);
@@ -936,6 +936,24 @@ bool UbloxFirmware7::configureUblox() {
     throw std::runtime_error("Failed to read the GNSS config.");
   }
 
+  // configure Antenna Supply Voltage Control Signal
+  ublox_msgs::CfgANT cfg_ant;
+  if (gps.poll(cfg_ant)) {
+    ROS_DEBUG("Read ANT config. Now flag: %i", cfg_ant.flags);
+  } else {
+    throw std::runtime_error("Failed to read the ANT config.");
+  }
+  cfg_ant.flags = cfg_ant.FLAGS_SVCS;
+  if (!gps.configure(cfg_ant)) {
+    throw std::runtime_error(std::string("Failed to enable Antenna Supply Voltage Control Signal"));
+  }
+  if (gps.poll(cfg_ant)) {
+    ROS_DEBUG("Read ANT config. Now flag: %i", cfg_ant.flags);
+  } else {
+    throw std::runtime_error("Failed to read the ANT config.");
+  }
+
+
   ublox_msgs::CfgGNSS cfgGNSSWrite;
   cfgGNSSWrite.numConfigBlocks = 1;  // do services one by one
   cfgGNSSWrite.numTrkChHw = cfgGNSSRead.numTrkChHw;
@@ -956,6 +974,8 @@ bool UbloxFirmware7::configureUblox() {
                                " GLONASS.");
     }
   }
+
+
 
   if(supportsGnss("QZSS")) {
     // configure QZSS

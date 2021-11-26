@@ -658,6 +658,10 @@ class UbloxNode : public virtual ComponentInterface {
 
   //! raw data stream logging
   RawDataStreamPa rawDataStreamPa_;
+  
+  //! Antenna Supply Voltage Control Signal
+  bool enable_svcs_;
+ 
 };
 
 /**
